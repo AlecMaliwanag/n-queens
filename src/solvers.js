@@ -77,92 +77,71 @@ window.findNQueensSolution = function(n) {
   if (n === 0) {
     return {n: 0};
   }
-
-  var boards = [];
-  for (var i = 0; i < n; i++) {
-    var board = new Board({n: n});
-    board.togglePiece(0, i);
-    boards.push(board);
-  }
-
-  if (n === 1) {
-    return boards[0].rows();
-  }
-  var evaluateBoard = function(board, row, col, counter) {
-    var placed = false;
-    if (col === n) {
-      row = row + 1;
-      col = 0;
-    }
-
-    if (board.get(row)[col] === 0) {
-      board.togglePiece(row, col);
-      counter++;
-      placed = true;
-    }
-
+  
+  var evaluateBoard = function(board, row ) {
     if (board.hasAnyQueensConflicts()) {
-      board.togglePiece(row, col);
-      counter--;
-      placed = false;
-    }
-
-    if (placed && counter < n) {
-      var dup = new Board(board.rows().slice());
-      evaluateBoard(dup, row + 1, 0, counter);
-      board.togglePiece(row, col);
-      counter--;
-    }
-
-
-    if (row === n - 1 && col === n - 1) {
-      if (counter === n) {
-        solution.push(board.rows());
-      }
       return;
     }
-    evaluateBoard(board, row, col + 1, counter);
+    if (row === board.get('n')) {
+      solution.push(board.rows().slice());
+      return;
+    }
+
+    for (var i = 0; i < board.get('n'); i++) {
+      testRow = [];
+      for (var j = 0; j < board.get('n'); j++) {
+        if (j === i) {
+          testRow.push(1);
+        } else {
+          testRow.push(0);
+        }
+      }
+      var newBoard = new Board(board.rows());
+      newBoard.set(row, testRow);
+      evaluateBoard(newBoard, row + 1);
+    }
   };
-  boards.forEach(function(board) {
-    evaluateBoard(board, 1, 0, 1);
-  });
-
-
-
-
-  console.log('Single solution for ' + n + ' queens:', JSON.stringify(solution));
+  var initBoard = new Board({n: n });
+  evaluateBoard(initBoard,0);
+  if (solution.length === 0) {
+    return initBoard.rows();
+  }
+  console.log('Single solution for ' + n + ' queens:', JSON.stringify(solution[0]));
   return solution[0];
 };
 
-  // var solution;
-  // var evaluateBoard = function(board, row, col, counter) {
-  //   if (col === n) {
-  //     row = row + 1;
-  //     col = 0;
-  //   }
-
-  //   board.togglePiece(row, col);
-  //   counter++;
-  //   if (board.hasAnyQueensConflicts()) {
-  //     board.togglePiece(row, col);
-  //     counter--;
-  //   }
-
-  //   if (row === n - 1 && col === n - 1) {
-  //     if (counter === n) {
-  //       solution = board.rows();
-  //     }
-  //     return;
-  //   }
-  //   evaluateBoard(board, row, col + 1, counter);
-  // };
-  // boards.forEach(function(board) {
-  //   evaluateBoard(board, 1, 0, 1);
-  // });
 // return the number of nxn chessboards that exist, with n queens placed such that none of them can attack each other
 window.countNQueensSolutions = function(n) {
-  var solutionCount = undefined; //fixme
+  var solution = 0;
+  if (n === 0) {
+    return 1;
+  }
+  
+  var evaluateBoard = function(board, row ) {
+    if (board.hasAnyQueensConflicts()) {
+      return;
+    }
+    if (row === board.get('n')) {
+      solution++;
+      return;
+    }
 
-  console.log('Number of solutions for ' + n + ' queens:', solutionCount);
-  return solutionCount;
+    for (var i = 0; i < board.get('n'); i++) {
+      testRow = [];
+      for (var j = 0; j < board.get('n'); j++) {
+        if (j === i) {
+          testRow.push(1);
+        } else {
+          testRow.push(0);
+        }
+      }
+      var newBoard = new Board(board.rows());
+      newBoard.set(row, testRow);
+      evaluateBoard(newBoard, row + 1);
+    }
+  };
+  var initBoard = new Board({n: n });
+  evaluateBoard(initBoard,0);
+  console.log('Number of solutions for ' + n + ' queens:', solution);
+  return solution;
 };

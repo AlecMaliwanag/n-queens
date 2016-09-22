@@ -79,7 +79,7 @@
     //
     // test if a specific row on this board contains a conflict
     hasRowConflictAt: function(rowIndex) {
-      return this.get(rowIndex).reduce((previous,current)=>previous+current,0) > 1;
+      return this.get(rowIndex).reduce((previous, current)=>previous + current, 0) > 1;
 
 
       // var x =this.get(rowIndex);
