@@ -77,7 +77,6 @@ window.findNQueensSolution = function(n) {
   if (n === 0) {
     return {n: 0};
   }
-  
   var evaluateBoard = function(board, row ) {
     if (board.hasAnyQueensConflicts()) {
       return;
@@ -86,7 +85,6 @@ window.findNQueensSolution = function(n) {
       solution.push(board.rows().slice());
       return;
     }
-
     for (var i = 0; i < board.get('n'); i++) {
       testRow = [];
       for (var j = 0; j < board.get('n'); j++) {
@@ -102,7 +100,7 @@ window.findNQueensSolution = function(n) {
     }
   };
   var initBoard = new Board({n: n });
-  evaluateBoard(initBoard,0);
+  evaluateBoard(initBoard, 0);
   if (solution.length === 0) {
     return initBoard.rows();
   }
@@ -116,27 +114,26 @@ window.countNQueensSolutions = function(n) {
   if (n === 0) {
     return 1;
   }
-  if (n===1) {
+  if (n === 1) {
     return 1;
   }
-  
   var evaluateBoard = function(board, row, column) {
     if (board.hasAnyQueensConflicts()) {
       return;
     }
-    if (row === board.get('n')) {
+    if (row === n) {
       if (board.get(0)[Math.floor(n / 2)] === 1) {
         solution++;
       } else {
-        solution +=2;
+        solution += 2;
       }
       return;
     }
     
-    var ilength = row === 0 ? Math.ceil(board.get('n') / 2) : board.get('n');
+    var ilength = row === 0 ? Math.ceil(n / 2) : n;
     for (var i = 0; i < ilength; i++) {
       testRow = [];
-      for (var j = 0; j < board.get('n'); j++) {
+      for (var j = 0; j < n; j++) {
         if (j === i) {
           testRow.push(1);
         } else {
@@ -149,8 +146,7 @@ window.countNQueensSolutions = function(n) {
     }
   };
   var initBoard = new Board({n: n });
-  evaluateBoard(initBoard,0);
+  evaluateBoard(initBoard, 0);
   console.log('Number of solutions for ' + n + ' queens:', solution);
-
   return solution;
 };
